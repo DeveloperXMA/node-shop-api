@@ -5,8 +5,10 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 
+
 const productsRoute = require('./api/routes/products');
 const ordersRoute = require('./api/routes/orders');
+const userRoutes = require('./api/routes/user');
 
 mongoose.connect('mongodb+srv://xinruima:' + process.env.MONGO_ATLAS_PW + '@cluster0-op2cg.mongodb.net/test',
 {
@@ -16,6 +18,7 @@ mongoose.connect('mongodb+srv://xinruima:' + process.env.MONGO_ATLAS_PW + '@clus
 mongoose.Promise = global.Promise;
 
 app.use(morgan('dev'));
+app.use('/uploads', express.static('uploads')); // This will make the uploads folder available to everyone
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -34,7 +37,7 @@ app.use((req, res, next) => {
 // use 就是个middleware
 app.use('/products', productsRoute);
 app.use('/orders', ordersRoute);
-
+app.use('/user', userRoutes);
 
 app.use((req, res, next) => {
   const error = new Error('Not found');
